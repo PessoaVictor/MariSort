@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MariSort - Sorteador Natura da Mari</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        
+        <header class="header">
+            <h1 class="logo">
+                <i class="fas fa-dice"></i>
+                MariSort
+            </h1>
+            <div class="mariane-photo-container" id="mariane-container">
+                <img src="images/Mariane Pinheiro.jpg" alt="Mariane Pinheiro" class="mariane-photo" id="mariane-photo">
+            </div>
+            <p class="subtitle">Sorteador Natura da Mari!</p>
+        </header>
+
+        
+        <main class="main-content three-column-layout">
+            
+            <section class="results-section left-column">
+                <div class="results-card card-equal-height">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-trophy"></i>
+                            Já Sorteados
+                        </h3>
+                        <span class="count" id="sorteados-count">0</span>
+                    </div>
+                    <div class="participants-list scrollable-list" id="sorteados-list">
+                        <div class="empty-state">
+                            <i class="fas fa-trophy"></i>
+                            <p>Nenhum participante sorteado ainda</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="sorteio-section middle-column">
+                <div class="sorteio-card card-equal-height">
+                    <div class="card-header">
+                        <h2>Sorteio de Participantes</h2>
+                        <div class="stats">
+                            <span class="stat">
+                                <i class="fas fa-users"></i>
+                                <span id="total-participants">19</span> participantes
+                            </span>
+                            <span class="stat">
+                                <i class="fas fa-trophy"></i>
+                                <span id="remaining-participants">19</span> restantes
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="sorteio-display">
+                        <div class="winner-container" id="winner-container">
+                            <div class="winner-placeholder">
+                                <i class="fas fa-gift"></i>
+                                <p>Clique em "Sortear" para começar!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sorteio-controls">
+                        <button class="btn-sortear" id="btn-sortear">
+                            <i class="fas fa-dice"></i>
+                            <span>Sortear</span>
+                        </button>
+                        <button class="btn-reset" id="btn-reset">
+                            <i class="fas fa-redo"></i>
+                            <span>Reiniciar</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-section right-column">
+                <div class="results-card card-equal-height">
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-clock"></i>
+                            Aguardando Sorteio
+                        </h3>
+                        <span class="count" id="restantes-count">19</span>
+                    </div>
+                    <div class="participants-list scrollable-list" id="restantes-list">
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>MariSort. Desenvolvido com <i class="fas fa-heart"></i> para sorteio da Daily</p>
+        </footer>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="ad-sidebar ad-left">
+            <div class="ad-content">
+                <h3>Natura</h3>
+                <div class="ad-image-container">
+                    <img src="" alt="Produto Natura" id="natura-product">
+                </div>
+                <p class="ad-product-name" id="natura-name">Produto em Destaque</p>
+                <p class="ad-tagline">Bem estar bem</p>
+            </div>
+        </div>
+        <div class="loading-spinner">
+            <div class="dice-animation">
+                <i class="fas fa-dice"></i>
+            </div>
+            <p>Sorteando...</p>
+        </div>
+        <div class="ad-sidebar ad-right">
+            <div class="ad-content">
+                <h3>Avon</h3>
+                <div class="ad-image-container">
+                    <img src="" alt="Produto Avon" id="avon-product">
+                </div>
+                <p class="ad-product-name" id="avon-name">Produto em Destaque</p>
+                <p class="ad-tagline">Beleza que é a sua cara</p>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
