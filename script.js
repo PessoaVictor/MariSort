@@ -1,8 +1,86 @@
-let participantes = [];
-let mensagensDaily = [];
-let mensagensFlamengo = [];
-let naturaProdutos = [];
-let avonProdutos = [];
+const participantes = [
+  "Alex Silva",
+  "Bruna Reginato",
+  "Danilo França",
+  "Djonatas Tenfen",
+  "Eduardo Costa",
+  "Fernando Jardim",
+  "Guilherme Carbonesi",
+  "Jonathan Cunha",
+  "Lucas Troncoso",
+  "Luiz Lopes",
+  "Nathaly Lira",
+  "Ricardo Pivovarcsik",
+  "Rogerio Filho",
+  "Thiago Almeida",
+  "Victor Pessoa"
+];
+
+const mensagensDaily = [
+  { "mensagem": "{nome}, você foi escolhido! Hora de compartilhar suas novidades! 📋", "emoji": "📋" },
+  { "mensagem": "Parabéns {nome}! É sua vez de falar na daily! 🎤", "emoji": "🎤" },
+  { "mensagem": "{nome}, você foi sorteado! Não esqueça de mencionar os impedimentos! 🚧", "emoji": "🚧" },
+  { "mensagem": "É a sua vez, {nome}! Vamos ver o que você fez ontem! 😄", "emoji": "😄" },
+  { "mensagem": "{nome}, prepare-se! Todo mundo quer ouvir suas atualizações! 🔥", "emoji": "🔥" },
+  { "mensagem": "Sorteado: {nome}! Esperamos novidades interessantes! 😂", "emoji": "😂" },
+  { "mensagem": "{nome}, você foi escolhido! Hora de contar como foi seu dia! ☀️", "emoji": "☀️" },
+  { "mensagem": "Parabéns {nome}! Esperamos que tenha mais que 'tudo normal'! 📺", "emoji": "📺" },
+  { "mensagem": "{nome}, você foi sorteado! Vamos descobrir suas conquistas! 🕵️", "emoji": "🕵️" },
+  { "mensagem": "É você, {nome}! Prepare o relatório das suas atividades! 😅", "emoji": "😅" },
+  { "mensagem": "{nome}, sorteado! Esperamos que não diga só 'mesma coisa de sempre'! 😒", "emoji": "😒" },
+  { "mensagem": "Sua vez, {nome}! Conta pra gente o que rolou de bom! 🤞", "emoji": "🤞" },
+  { "mensagem": "{nome}, você foi escolhido! Hora de dividir suas experiências! 📚", "emoji": "📚" },
+  { "mensagem": "Parabéns {nome}! Todo mundo quer saber das suas updates! 🔃", "emoji": "🔃" },
+  { "mensagem": "{nome}, sua hora chegou! Vamos ouvir suas novidades! 🎯", "emoji": "🎯" },
+  { "mensagem": "É você, {nome}! Todo mundo está curioso para ouvir! ⚡", "emoji": "⚡" },
+  { "mensagem": "{nome}, sorteado! Hora de brilhar na daily! 🤔", "emoji": "🤔" },
+  { "mensagem": "Sua vez, {nome}! Vamos ver o que você tem para contar! 👀", "emoji": "👀" },
+  { "mensagem": "{nome}, você ganhou! Hora de apresentar seus resultados! 📅", "emoji": "📅" },
+  { "mensagem": "Parabéns {nome}! O palco é seu para falar na daily! 🎸", "emoji": "🎸" },
+  { "mensagem": "{nome}, sua vez! Todo mundo quer saber das novidades! 📰", "emoji": "📰" },
+  { "mensagem": "É você, {nome}! Prepare-se para compartilhar suas conquistas! 📝", "emoji": "📝" },
+  { "mensagem": "{nome}, sorteado! Vamos descobrir o que você andou fazendo! ⏰", "emoji": "⏰" },
+  { "mensagem": "Sua vez, {nome}! Todo mundo ansioso para suas atualizações! 🌟", "emoji": "🌟" }
+];
+
+const mensagensFlamengo = [
+  { "mensagem": "Thiago Almeida! Uma vez Flamengo, sempre sorteado! Mengão!", "emoji": "🔴⚫" },
+  { "mensagem": "Thiago, o Manto Sagrado te protege! Você foi escolhido!", "emoji": "👑🔴" },
+  { "mensagem": "Thiago Almeida na área! Flamengo é paixão que sorteio não apaga!", "emoji": "❤️‍🔥" },
+  { "mensagem": "Thiago, o Urubu voou e pousou em você! Que sorte rubro-negra!", "emoji": "🦅🔴" },
+  { "mensagem": "Thiago Almeida! Como diria Zico: você nasceu pra ser campeão!", "emoji": "🏆⚽" },
+  { "mensagem": "Thiago, a Nação Rubro-negra comemora! Você foi sorteado!", "emoji": "🎉🔴⚫" },
+  { "mensagem": "Thiago Almeida! Do Ninho do Urubu direto pro sorteio da vitória!", "emoji": "🦅🏟️" },
+  { "mensagem": "Thiago, Gabigol seria titular, mas você é o sorteado da vez!", "emoji": "⚽🔥" },
+  { "mensagem": "Thiago Almeida! Flamengo tem Mundial, você tem o sorteio!", "emoji": "🌍🏆" },
+  { "mensagem": "Thiago, na Gávea ou aqui, você sempre sai vitorioso!", "emoji": "🏟️✨" },
+  { "mensagem": "Thiago Almeida! A torcida do Flamengo está cantando pra você!", "emoji": "🎵🔴" },
+  { "mensagem": "Thiago, o Maracanã lotado não faz mais barulho que essa vitória!", "emoji": "🏟️📢" },
+  { "mensagem": "Thiago Almeida! Mengão no coração, sorteado na mão!", "emoji": "❤️🏆" },
+  { "mensagem": "Thiago, de Copacabana ao sorteio! Flamengo é isso aí!", "emoji": "🏖️🔴" },
+  { "mensagem": "Thiago Almeida! Jorge Jesus ficaria orgulhoso desse sorteio!", "emoji": "🇵🇹⚽" },
+  { "mensagem": "Thiago, o Fla-Flu do sorteio você já ganhou! Mengão sempre!", "emoji": "🔴⚫🆚" },
+  { "mensagem": "Thiago Almeida! Arrascaeta passa, Thiago marca... o sorteio!", "emoji": "⚽🇺🇾" },
+  { "mensagem": "Thiago, a camisa 10 do sorteio é sua! Flamengo!", "emoji": "👕🔟" },
+  { "mensagem": "Thiago Almeida! O Mais Querido do Brasil sorteou o Mais Querido aqui!", "emoji": "💕🇧🇷" },
+  { "mensagem": "Thiago, Libertadores, Mundial, e agora esse sorteio! Mengão imparável!", "emoji": "🏆🌎" }
+];
+
+const naturaProdutos = [
+  { "name": "Natura Biografia", "image": "images/produtos/natura/natura-biografia.jpg" },
+  { "name": "Natura Delineador Una", "image": "images/produtos/natura/natura-delineador-una.jpg" },
+  { "name": "Natura Evolut.io", "image": "images/produtos/natura/natura-evolut.io.jpg" },
+  { "name": "Natura Kaiak", "image": "images/produtos/natura/natura-kaiak.jpg" },
+  { "name": "Natura Una", "image": "images/produtos/natura/natura-una.jpg" }
+];
+
+const avonProdutos = [
+  { "name": "Avon Absolute", "image": "images/produtos/avon/avon-absolute.jpg" },
+  { "name": "Avon Attraction", "image": "images/produtos/avon/avon-attraction.jpg" },
+  { "name": "Avon Power Stay", "image": "images/produtos/avon/avon-powerstay.jpg" },
+  { "name": "Avon Pur Blanca", "image": "images/produtos/avon/avon-purblanca.jpg" },
+  { "name": "Avon Segno", "image": "images/produtos/avon/avon-segno.jpg" }
+];
 
 let participantesRestantes = [];
 let participantesSorteados = [];
@@ -27,41 +105,8 @@ const confettiCanvas = document.getElementById('confetti-canvas');
 const marianePhoto = document.getElementById('mariane-photo');
 const marianeContainer = document.getElementById('mariane-container');
 
-async function loadMessages() {
-    try {
-        const response = await fetch('messages.json');
-        const data = await response.json();
-        mensagensDaily = data.daily;
-        mensagensFlamengo = data.flamengo;
-    } catch (error) {
-        console.error('Erro ao carregar mensagens:', error);
-        mensagensDaily = [{ mensagem: "{nome}, você foi sorteado!", emoji: "🎉" }];
-        mensagensFlamengo = [{ mensagem: "Thiago Almeida sorteado!", emoji: "🔴⚫" }];
-    }
-}
-
 async function loadParticipants() {
-    try {
-        const response = await fetch('participants.json');
-        const data = await response.json();
-        participantes = data.participantes;
-        participantesRestantes = [...participantes];
-    } catch (error) {
-        console.error('Erro ao carregar participantes:', error);
-        participantes = ["Participante 1", "Participante 2", "Participante 3"];
-        participantesRestantes = [...participantes];
-    }
-}
-
-async function loadProducts() {
-    try {
-        const response = await fetch('products.json');
-        const data = await response.json();
-        naturaProdutos = data.natura;
-        avonProdutos = data.avon;
-    } catch (error) {
-        console.log('Erro ao carregar produtos:', error);
-    }
+    participantesRestantes = [...participantes];
 }
 
 function getInitials(nome) {
