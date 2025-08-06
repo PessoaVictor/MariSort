@@ -351,8 +351,6 @@ async function sortearParticipante() {
     startMarianeAnimation();
     showLoading();
     
-    // Delay removido para sorteio instantâneo
-    
     const randomIndex = Math.floor(Math.random() * participantesRestantes.length);
     const participanteSorteado = participantesRestantes[randomIndex];
     
