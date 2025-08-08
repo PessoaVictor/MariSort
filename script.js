@@ -1,3 +1,26 @@
+let sorteadores = {
+    mari: {
+        name: "MariSort",
+        photo: "images/Mariane Pinheiro.jpg",
+        alt: "Mariane Pinheiro",
+        displayName: "Mari"
+    },
+    alana: {
+        name: "AlanaSort", 
+        photo: "images/Alana.png",
+        alt: "Alana",
+        displayName: "Alana"
+    },
+    haya: {
+        name: "HayaSort",
+        photo: "images/Haya.png", 
+        alt: "Haya",
+        displayName: "Haya"
+    }
+};
+
+let currentSorteador = null;
+
 const participantes = [
   "Alex Silva",
   "Bruna Reginato",
@@ -10,7 +33,6 @@ const participantes = [
   "Lucas Troncoso",
   "Luiz Lopes",
   "Nathaly Lira",
-  "Ricardo Pivovarcsik",
   "Rogerio Filho",
   "Thiago Almeida",
   "Victor Pessoa"
@@ -107,6 +129,14 @@ const marianeContainer = document.getElementById('mariane-container');
 
 async function loadParticipants() {
     participantesRestantes = [...participantes];
+}
+
+async function loadMessages() {
+    return Promise.resolve();
+}
+
+async function loadProducts() {
+    return Promise.resolve();
 }
 
 function getInitials(nome) {
@@ -683,8 +713,275 @@ function launchFlamengoBombaca() {
     }, 3000);
 }
 
+function setupSelectorScreen() {
+    renderSelectorOptions();
+    setupSelectorConfigModal();
+}
+
+function renderSelectorOptions() {
+    const container = document.getElementById('selector-options');
+    container.innerHTML = '';
+    
+    Object.keys(sorteadores).forEach(key => {
+        const config = sorteadores[key];
+        const option = document.createElement('div');
+        option.className = 'selector-option';
+        option.dataset.person = key;
+        option.innerHTML = `
+            <img src="${config.photo}" alt="${config.alt}" class="selector-avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNEMxNCA1LjEgMTMuMSA2IDEyIDZDMTAuOSA2IDEwIDUuMSAxMCA0QzEwIDIuOSAxMC45IDIgMTIgMlpNMjEgOVYyMkgyVjlDMiA3LjkgMi45IDcgNCA3SDE0LjJDMTQuMiA3IDE0LjMgNyAxNC40IDdIMjBDMjEuMSA3IDIyIDcuOSAyMiA5WiIvPgo8L3N2Zz4KPC9zdmc+'">
+            <div class="selector-name">${config.displayName}</div>
+            <div class="selector-description">${config.name}</div>
+        `;
+        
+        option.addEventListener('click', function() {
+            selectSorteador(key);
+        });
+        
+        container.appendChild(option);
+    });
+}
+
+function setupSelectorConfigModal() {
+    const configBtn = document.getElementById('selector-config-btn');
+    const modal = document.getElementById('sorteadores-modal');
+    const closeBtn = document.getElementById('close-sorteadores-modal');
+    const cancelBtn = document.getElementById('btn-cancel-sorteadores');
+    const saveBtn = document.getElementById('btn-save-sorteadores');
+    const addBtn = document.getElementById('btn-add-sorteador');
+    
+    configBtn.addEventListener('click', openSorteadoresModal);
+    closeBtn.addEventListener('click', closeSorteadoresModal);
+    cancelBtn.addEventListener('click', closeSorteadoresModal);
+    saveBtn.addEventListener('click', saveSorteadoresConfig);
+    addBtn.addEventListener('click', addNewSorteador);
+    
+    // Setup upload de foto para sorteadores
+    setupPhotoUpload('new-sorteador-photo', 'photo-upload-preview');
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeSorteadoresModal();
+        }
+    });
+}
+
+let sorteadoresParaSalvar = {};
+
+function openSorteadoresModal() {
+    sorteadoresParaSalvar = JSON.parse(JSON.stringify(sorteadores));
+    renderSorteadoresManager();
+    document.getElementById('sorteadores-modal').classList.add('show');
+}
+
+function closeSorteadoresModal() {
+    document.getElementById('new-sorteador-name').value = '';
+    document.getElementById('new-sorteador-app-name').value = '';
+    document.getElementById('new-sorteador-photo').value = '';
+    resetPhotoPreview('photo-upload-preview');
+    
+    document.getElementById('sorteadores-modal').classList.remove('show');
+}
+
+function renderSorteadoresManager() {
+    const container = document.getElementById('sorteadores-manager');
+    container.innerHTML = '';
+    
+    if (Object.keys(sorteadoresParaSalvar).length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <p>Nenhum sorteador cadastrado</p>
+            </div>
+        `;
+        return;
+    }
+    
+    Object.keys(sorteadoresParaSalvar).forEach(key => {
+        const config = sorteadoresParaSalvar[key];
+        const item = document.createElement('div');
+        item.className = 'sorteador-item';
+        item.innerHTML = `
+            <img src="${config.photo}" alt="${config.alt}" class="sorteador-photo" 
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIxOCIgeT0iMTUiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNEMxNCA1LjEgMTMuMSA2IDEyIDZDMTAuOSA2IDEwIDUuMSAxMCA0QzEwIDIuOSAxMC45IDIgMTIgMlpNMjEgOVYyMkgyVjlDMiA3LjkgMi45IDcgNCA3SDE0LjJDMTQuMiA3IDE0LjMgNyAxNC40IDdIMjBDMjEuMSA3IDIyIDcuOSAyMiA5WiIvPgo8L3N2Zz4KPC9zdmc+'">
+            <div class="sorteador-info">
+                <h4>${config.displayName}</h4>
+                <p>${config.name}</p>
+            </div>
+            <div class="sorteador-actions">
+                <button class="btn-remove-sorteador" onclick="removeSorteador('${key}')">
+                    <i class="fas fa-trash"></i>
+                    Remover
+                </button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function addNewSorteador() {
+    const name = document.getElementById('new-sorteador-name').value.trim();
+    const appName = document.getElementById('new-sorteador-app-name').value.trim();
+    const photoFile = document.getElementById('new-sorteador-photo').files[0];
+    
+    if (!name || !appName) {
+        alert('Por favor, preencha o nome e o nome do app.');
+        return;
+    }
+    
+    const key = name.toLowerCase().replace(/\s+/g, '');
+    
+    if (sorteadoresParaSalvar[key]) {
+        alert('Já existe um sorteador com esse nome.');
+        return;
+    }
+    
+    const finalAppName = appName.endsWith('Sort') ? appName : appName + 'Sort';
+    
+    // Processa a foto
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            sorteadoresParaSalvar[key] = {
+                name: finalAppName,
+                photo: e.target.result, // Base64 da imagem
+                alt: name,
+                displayName: name
+            };
+            
+            // Limpa os campos
+            document.getElementById('new-sorteador-name').value = '';
+            document.getElementById('new-sorteador-app-name').value = '';
+            document.getElementById('new-sorteador-photo').value = '';
+            resetPhotoPreview('photo-upload-preview');
+            
+            renderSorteadoresManager();
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        // Sem foto, usa avatar padrão
+        sorteadoresParaSalvar[key] = {
+            name: finalAppName,
+            photo: `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNEMxNCA1LjEgMTMuMSA2IDEyIDZDMTAuOSA2IDEwIDUuMSAxMCA0QzEwIDIuOSAxMC45IDIgMTIgMlpNMjEgOVYyMkgyVjlDMiA3LjkgMi45IDcgNCA3SDE0LjJDMTQuMiA3IDE0LjMgNyAxNC40IDdIMjBDMjEuMSA7IDIyIDcuOSAyMiA5WiIvPgo8L3N2Zz4KPC9zdmc+`,
+            alt: name,
+            displayName: name
+        };
+        
+        // Limpa os campos
+        document.getElementById('new-sorteador-name').value = '';
+        document.getElementById('new-sorteador-app-name').value = '';
+        
+        renderSorteadoresManager();
+    }
+}
+
+function removeSorteador(key) {
+    const config = sorteadoresParaSalvar[key];
+    if (confirm(`Tem certeza que deseja remover "${config.displayName}" da lista de sorteadores?`)) {
+        delete sorteadoresParaSalvar[key];
+        renderSorteadoresManager();
+    }
+}
+
+function saveSorteadoresConfig() {
+    sorteadores = JSON.parse(JSON.stringify(sorteadoresParaSalvar));
+    renderSelectorOptions();
+    
+    saveSorteadoresData();
+    
+    closeSorteadoresModal();
+    alert('Sorteadores salvos com sucesso!');
+}
+
+function saveSorteadoresData() {
+    try {
+        localStorage.setItem('mariSortSorteadores', JSON.stringify(sorteadores));
+        console.log('Sorteadores salvos:', sorteadores);
+    } catch (error) {
+        console.error('Erro ao salvar sorteadores:', error);
+    }
+}
+
+function loadSorteadoresData() {
+    try {
+        const saved = localStorage.getItem('mariSortSorteadores');
+        if (saved) {
+            const loadedSorteadores = JSON.parse(saved);
+            sorteadores = { ...sorteadores, ...loadedSorteadores };
+            console.log('Sorteadores carregados:', sorteadores);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar sorteadores:', error);
+    }
+}
+
+function setupPhotoUpload(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    
+    if (!input || !preview) return;
+    
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('A imagem deve ter menos de 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                showImagePreview(preview, event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    preview.addEventListener('click', function() {
+        input.click();
+    });
+}
+
+function showImagePreview(previewElement, imageSrc) {
+    previewElement.innerHTML = `
+        <img src="${imageSrc}" alt="Preview" class="preview-image">
+    `;
+    previewElement.classList.add('has-image');
+}
+
+function resetPhotoPreview(previewId) {
+    const preview = document.getElementById(previewId);
+    if (preview) {
+        preview.innerHTML = `
+            <div class="upload-placeholder">
+                <i class="fas fa-camera"></i>
+                <p>Clique para escolher foto</p>
+            </div>
+        `;
+        preview.classList.remove('has-image');
+    }
+}
+
+function selectSorteador(person) {
+    currentSorteador = person;
+    const config = sorteadores[person];
+    
+    document.getElementById('app-name').textContent = config.name;
+    document.getElementById('footer-app-name').textContent = config.name;
+    document.getElementById('app-title').textContent = config.name + ' - Sorteador Daily';
+    
+    const photoElement = document.getElementById('mariane-photo');
+    photoElement.src = config.photo;
+    photoElement.alt = config.alt;
+    
+    document.getElementById('selector-screen').style.display = 'none';
+    document.getElementById('main-container').style.display = 'block';
+    
+    initializeApp();
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
-    await initializeApp();
+    loadSorteadoresData();
+    setupSelectorScreen();
     setupEventListeners();
     setupMarianeAnimations();
 });

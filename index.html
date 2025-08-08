@@ -3,16 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MariSort - Sorteador Natura da Mari</title>
+    <title id="app-title">MariSort - Selecione o Sorteador</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        
+    <div id="selector-screen" class="selector-screen">
+        <div class="selector-container">
+            <header class="selector-header">
+                <h1 class="selector-title">
+                    <i class="fas fa-dice"></i>
+                    Escolha seu Sorteador
+                </h1>
+                <p class="selector-subtitle">Selecione quem irá conduzir o sorteio da Daily</p>
+                <button class="selector-config-btn" id="selector-config-btn" title="Gerenciar Sorteadores">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </header>
+            
+            <main class="selector-main">
+                <div class="selector-options" id="selector-options">
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="main-container" class="container" style="display: none;">
         <header class="header">
-            <h1 class="logo">
+            <h1 class="logo" id="app-name">
                 <i class="fas fa-dice"></i>
                 MariSort
             </h1>
@@ -97,7 +116,8 @@
         </main>
 
         <footer class="footer">
-            <p>MariSort. Desenvolvido com <i class="fas fa-heart"></i> para sorteio da Daily</p>
+            <p id="footer-app-name">MariSort</p>
+            <p>Desenvolvido com <i class="fas fa-heart"></i> para sorteio da Daily</p>
         </footer>
     </div>
 
@@ -131,6 +151,71 @@
     </div>
 
     <canvas id="confetti-canvas"></canvas>
+
+    <div id="sorteadores-modal" class="sorteadores-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-users-cog"></i>
+                    Gerenciar Sorteadores
+                </h3>
+                <button class="close-btn" id="close-sorteadores-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="sorteadores-manager" id="sorteadores-manager">
+                </div>
+                
+                <div class="add-sorteador-section">
+                    <h4>
+                        <i class="fas fa-plus"></i>
+                        Adicionar Novo Sorteador
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="new-sorteador-name">Nome do Sorteador:</label>
+                        <input type="text" id="new-sorteador-name" placeholder="Ex: João Silva" maxlength="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-sorteador-app-name">Nome do App:</label>
+                        <input type="text" id="new-sorteador-app-name" placeholder="Ex: JoãoSort" maxlength="30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-sorteador-photo">Foto do Sorteador:</label>
+                        <div class="photo-upload-container">
+                            <input type="file" id="new-sorteador-photo" accept="image/*" style="display: none;">
+                            <div class="photo-upload-preview" id="photo-upload-preview">
+                                <div class="upload-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Clique para escolher foto</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-add-sorteador" id="btn-add-sorteador">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Sorteador
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-cancel" id="btn-cancel-sorteadores">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button class="btn-save" id="btn-save-sorteadores">
+                    <i class="fas fa-save"></i>
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
