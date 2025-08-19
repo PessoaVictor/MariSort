@@ -1,10 +1,4 @@
 let sorteadores = {
-    mari: {
-        name: "MariSort",
-        photo: "images/Mariane Pinheiro.jpg",
-        alt: "Mariane Pinheiro",
-        displayName: "Mari"
-    },
     alana: {
         name: "AlanaSort", 
         photo: "images/Alana.png",
@@ -21,14 +15,14 @@ let sorteadores = {
 
 let currentSorteador = null;
 
+let participantPhotos = {};
+
 const participantes = [
   "Alex Silva",
   "Bruna Reginato",
   "Danilo França",
   "Djonatas Tenfen",
   "Eduardo Costa",
-  "Fernando Jardim",
-  "Guilherme Carbonesi",
   "Jonathan Cunha",
   "Lucas Troncoso",
   "Luiz Lopes",
@@ -174,6 +168,10 @@ async function checkImageExists(imagePath) {
 }
 
 async function getParticipantImage(nome) {
+    if (participantPhotos[nome]) {
+        return participantPhotos[nome];
+    }
+    
     const paths = generateImagePath(nome);
     
     for (const path of paths) {
@@ -234,6 +232,18 @@ async function initializeApp() {
 function setupEventListeners() {
     btnSortear.addEventListener('click', sortearParticipante);
     btnReset.addEventListener('click', resetSorteio);
+    
+    const backBtn = document.getElementById('back-to-selector');
+    if (backBtn) {
+        backBtn.addEventListener('click', backToSelectorScreen);
+    }
+    
+    const manageParticipantsBtn = document.getElementById('manage-participants-btn');
+    if (manageParticipantsBtn) {
+        manageParticipantsBtn.addEventListener('click', openParticipantsModal);
+    }
+    
+    setupParticipantsModal();
 }
 
 function setupMarianeAnimations() {
@@ -755,7 +765,6 @@ function setupSelectorConfigModal() {
     saveBtn.addEventListener('click', saveSorteadoresConfig);
     addBtn.addEventListener('click', addNewSorteador);
     
-    // Setup upload de foto para sorteadores
     setupPhotoUpload('new-sorteador-photo', 'photo-upload-preview');
     
     modal.addEventListener('click', function(e) {
@@ -837,18 +846,16 @@ function addNewSorteador() {
     
     const finalAppName = appName.endsWith('Sort') ? appName : appName + 'Sort';
     
-    // Processa a foto
     if (photoFile) {
         const reader = new FileReader();
         reader.onload = function(e) {
             sorteadoresParaSalvar[key] = {
                 name: finalAppName,
-                photo: e.target.result, // Base64 da imagem
+                photo: e.target.result,
                 alt: name,
                 displayName: name
             };
             
-            // Limpa os campos
             document.getElementById('new-sorteador-name').value = '';
             document.getElementById('new-sorteador-app-name').value = '';
             document.getElementById('new-sorteador-photo').value = '';
@@ -858,7 +865,6 @@ function addNewSorteador() {
         };
         reader.readAsDataURL(photoFile);
     } else {
-        // Sem foto, usa avatar padrão
         sorteadoresParaSalvar[key] = {
             name: finalAppName,
             photo: `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiM2MzY2ZjEiLz4KPHN2ZyB4PSIyNCIgeT0iMjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNEMxNCA1LjEgMTMuMSA2IDEyIDZDMTAuOSA2IDEwIDUuMSAxMCA0QzEwIDIuOSAxMC45IDIgMTIgMlpNMjEgOVYyMkgyVjlDMiA3LjkgMi45IDcgNCA3SDE0LjJDMTQuMiA3IDE0LjMgNyAxNC40IDdIMjBDMjEuMSA7IDIyIDcuOSAyMiA5WiIvPgo8L3N2Zz4KPC9zdmc+`,
@@ -866,7 +872,6 @@ function addNewSorteador() {
             displayName: name
         };
         
-        // Limpa os campos
         document.getElementById('new-sorteador-name').value = '';
         document.getElementById('new-sorteador-app-name').value = '';
         
@@ -979,8 +984,210 @@ function selectSorteador(person) {
     initializeApp();
 }
 
+function backToSelectorScreen() {
+    document.getElementById('main-container').style.display = 'none';
+    document.getElementById('selector-screen').style.display = 'block';
+    
+    resetSorteio();
+}
+
+let participantesParaSalvar = [];
+
+function setupParticipantsModal() {
+    const modal = document.getElementById('participants-modal');
+    const closeBtn = document.getElementById('close-participants-modal');
+    const cancelBtn = document.getElementById('btn-cancel-participants');
+    const saveBtn = document.getElementById('btn-save-participants');
+    const addBtn = document.getElementById('btn-add-participant');
+    
+    if (closeBtn) closeBtn.addEventListener('click', closeParticipantsModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeParticipantsModal);
+    if (saveBtn) saveBtn.addEventListener('click', saveParticipantsConfig);
+    if (addBtn) addBtn.addEventListener('click', addNewParticipant);
+    
+    setupPhotoUpload('new-participant-photo', 'participant-photo-upload-preview');
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeParticipantsModal();
+            }
+        });
+    }
+}
+
+function openParticipantsModal() {
+    participantesParaSalvar = [...participantes];
+    renderParticipantsManager();
+    const modal = document.getElementById('participants-modal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+function closeParticipantsModal() {
+    const nameInput = document.getElementById('new-participant-name');
+    if (nameInput) nameInput.value = '';
+    
+    const photoInput = document.getElementById('new-participant-photo');
+    if (photoInput) photoInput.value = '';
+    
+    resetPhotoPreview('participant-photo-upload-preview');
+    
+    const modal = document.getElementById('participants-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+function renderParticipantsManager() {
+    const container = document.getElementById('participants-manager');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (participantesParaSalvar.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <p>Nenhum participante cadastrado</p>
+            </div>
+        `;
+        return;
+    }
+    
+    participantesParaSalvar.forEach((participante, index) => {
+        const isDrawn = participantesSorteados.some(p => p.nome === participante);
+        const item = document.createElement('div');
+        item.className = `participant-item ${isDrawn ? 'already-drawn' : ''}`;
+        item.innerHTML = `
+            <div class="participant-name">
+                <i class="fas ${isDrawn ? 'fa-trophy' : 'fa-user'}"></i>
+                ${participante}
+            </div>
+            <div class="participant-actions">
+                <span class="participant-status ${isDrawn ? 'status-drawn' : 'status-waiting'}">
+                    ${isDrawn ? 'Já sorteado' : 'Aguardando'}
+                </span>
+                <button class="btn-remove-participant" onclick="removeParticipant(${index})" ${isDrawn ? 'disabled title="Não é possível remover participantes já sorteados"' : ''}>
+                    <i class="fas fa-trash"></i>
+                    Remover
+                </button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function addNewParticipant() {
+    const nameInput = document.getElementById('new-participant-name');
+    const photoFile = document.getElementById('new-participant-photo').files[0];
+    
+    if (!nameInput) return;
+    
+    const name = nameInput.value.trim();
+    
+    if (!name) {
+        alert('Por favor, digite o nome do participante.');
+        return;
+    }
+    
+    if (participantesParaSalvar.includes(name)) {
+        alert('Já existe um participante com esse nome.');
+        return;
+    }
+    
+    if (photoFile) {
+        if (photoFile.size > 5 * 1024 * 1024) {
+            alert('A imagem deve ter menos de 5MB.');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            participantPhotos[name] = e.target.result;
+            
+            participantesParaSalvar.push(name);
+            
+            nameInput.value = '';
+            document.getElementById('new-participant-photo').value = '';
+            resetPhotoPreview('participant-photo-upload-preview');
+            
+            saveParticipantPhotos();
+            
+            renderParticipantsManager();
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        participantesParaSalvar.push(name);
+        nameInput.value = '';
+        renderParticipantsManager();
+    }
+}
+
+function removeParticipant(index) {
+    const participante = participantesParaSalvar[index];
+    
+    const isDrawn = participantesSorteados.some(p => p.nome === participante);
+    if (isDrawn) {
+        alert('Não é possível remover participantes que já foram sorteados.');
+        return;
+    }
+    
+    if (confirm(`Tem certeza que deseja remover "${participante}" da lista de participantes?`)) {
+        participantesParaSalvar.splice(index, 1);
+        renderParticipantsManager();
+    }
+}
+
+function saveParticipantsConfig() {
+    participantes.length = 0;
+    participantes.push(...participantesParaSalvar);
+    
+    participantesRestantes = participantesRestantes.filter(nome => 
+        participantesParaSalvar.includes(nome)
+    );
+    
+    participantesParaSalvar.forEach(nome => {
+        if (!participantesRestantes.includes(nome) && 
+            !participantesSorteados.some(p => p.nome === nome)) {
+            participantesRestantes.push(nome);
+        }
+    });
+    
+    saveParticipantPhotos();
+    
+    updateUI();
+    renderParticipantsList();
+    closeParticipantsModal();
+    
+    alert('Lista de participantes atualizada com sucesso!');
+}
+
+function saveParticipantPhotos() {
+    try {
+        localStorage.setItem('mariSortParticipantPhotos', JSON.stringify(participantPhotos));
+        console.log('Fotos dos participantes salvas:', participantPhotos);
+    } catch (error) {
+        console.error('Erro ao salvar fotos dos participantes:', error);
+    }
+}
+
+function loadParticipantPhotos() {
+    try {
+        const saved = localStorage.getItem('mariSortParticipantPhotos');
+        if (saved) {
+            participantPhotos = JSON.parse(saved);
+            console.log('Fotos dos participantes carregadas:', participantPhotos);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar fotos dos participantes:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     loadSorteadoresData();
+    loadParticipantPhotos();
     setupSelectorScreen();
     setupEventListeners();
     setupMarianeAnimations();

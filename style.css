@@ -63,6 +63,38 @@ body::before {
 .header {
     text-align: center;
     margin-bottom: 40px;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background: var(--surface);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    padding: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    z-index: 10;
+}
+
+.back-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 4px 15px rgba(102, 102, 241, 0.3);
+}
+
+.back-btn:active {
+    transform: translateX(-2px) scale(0.95);
 }
 .logo {
     font-size: 3rem;
@@ -502,6 +534,39 @@ body::before {
 .right-column .card-header {
     border-bottom-color: rgba(245, 158, 11, 0.3);
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.manage-participants-btn {
+    background: var(--surface);
+    border: 2px solid var(--warning-color);
+    border-radius: 8px;
+    color: var(--warning-color);
+    font-size: 0.9rem;
+    padding: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+}
+
+.manage-participants-btn:hover {
+    background: var(--warning-color);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.manage-participants-btn:active {
+    transform: scale(0.95);
+}
 .results-card .card-header h3 {
     display: flex;
     align-items: center;
@@ -579,13 +644,16 @@ body::before {
     background: rgba(245, 158, 11, 0.1);
     box-shadow: 0 2px 10px rgba(245, 158, 11, 0.15);
 }
-.participant-name {
+.participants-list .participant-name {
     font-weight: 500;
+    font-size: 1rem;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 80%;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
 }
 .participant-position {
     background: var(--primary-color);
@@ -1238,11 +1306,25 @@ body::before {
     width: 90%;
     text-align: center;
     padding: 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .selector-header {
     margin-bottom: 40px;
     position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.selector-main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .selector-config-btn {
@@ -1405,6 +1487,10 @@ body::before {
         padding: 15px;
     }
     
+    .selector-header {
+        text-align: center;
+    }
+    
     .selector-option {
         padding: 20px 15px;
         min-width: 200px;
@@ -1412,9 +1498,12 @@ body::before {
     }
     
     .selector-config-btn {
-        position: relative;
-        margin: 20px auto 0;
-        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
     }
 }
 
@@ -1725,4 +1814,168 @@ body::before {
     .sorteador-photo {
         margin: 0;
     }
+}
+
+.participants-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.participants-modal.show {
+    display: flex;
+}
+
+.participants-manager {
+    margin-bottom: 30px;
+}
+
+.participants-modal .participant-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.participants-modal .participant-item:hover {
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.participants-modal .participant-item.already-drawn {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-color: #0ea5e9;
+}
+
+.participants-modal .participant-item.already-drawn .participant-name {
+    color: #0369a1;
+}
+
+.participants-modal .participant-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+}
+
+.participants-modal .participant-name i {
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+.participants-modal .participant-name i.fa-user {
+    color: #f59e0b;
+}
+
+.participants-modal .participant-name i.fa-trophy {
+    color: #0ea5e9;
+}
+
+.participant-status {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.status-waiting {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.status-drawn {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.participant-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-remove-participant {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
+
+.btn-remove-participant:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.btn-remove-participant:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.add-participant-section {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 25px;
+}
+
+.add-participant-section h4 {
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+}
+
+.btn-add-participant {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.btn-add-participant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
 }

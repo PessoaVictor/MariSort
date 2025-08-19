@@ -31,6 +31,9 @@
 
     <div id="main-container" class="container" style="display: none;">
         <header class="header">
+            <button class="back-btn" id="back-to-selector" title="Voltar para seleção de sorteador">
+                <i class="fas fa-arrow-left"></i>
+            </button>
             <h1 class="logo" id="app-name">
                 <i class="fas fa-dice"></i>
                 MariSort
@@ -107,7 +110,12 @@
                             <i class="fas fa-clock"></i>
                             Aguardando Sorteio
                         </h3>
-                        <span class="count" id="restantes-count">19</span>
+                        <div class="header-actions">
+                            <span class="count" id="restantes-count">19</span>
+                            <button class="manage-participants-btn" id="manage-participants-btn" title="Gerenciar Participantes">
+                                <i class="fas fa-user-cog"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="participants-list scrollable-list" id="restantes-list">
                     </div>
@@ -210,6 +218,66 @@
                     Cancelar
                 </button>
                 <button class="btn-save" id="btn-save-sorteadores">
+                    <i class="fas fa-save"></i>
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="participants-modal" class="participants-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-users-cog"></i>
+                    Gerenciar Participantes
+                </h3>
+                <button class="close-btn" id="close-participants-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="participants-manager" id="participants-manager">
+                </div>
+                
+                <div class="add-participant-section">
+                    <h4>
+                        <i class="fas fa-plus"></i>
+                        Adicionar Novo Participante
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="new-participant-name">Nome do Participante:</label>
+                        <input type="text" id="new-participant-name" placeholder="Ex: João Silva" maxlength="50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-participant-photo">Foto do Participante:</label>
+                        <div class="photo-upload-container">
+                            <input type="file" id="new-participant-photo" accept="image/*" style="display: none;">
+                            <div class="photo-upload-preview" id="participant-photo-upload-preview">
+                                <div class="upload-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Clique para escolher foto</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-add-participant" id="btn-add-participant">
+                        <i class="fas fa-plus"></i>
+                        Adicionar Participante
+                    </button>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-cancel" id="btn-cancel-participants">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button class="btn-save" id="btn-save-participants">
                     <i class="fas fa-save"></i>
                     Salvar Alterações
                 </button>
